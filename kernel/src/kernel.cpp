@@ -120,7 +120,7 @@ void kernel_main(){
     //Only install system calls when everything else is ready
     install_system_calls();
 
-    sysfs::set_constant_value(sysfs::get_sys_path(), path("/version"), "1.3:git-master");
+    sysfs::set_constant_value(sysfs::get_sys_path(), path("/version"), "2.0:git-master");
     sysfs::set_constant_value(sysfs::get_sys_path(), path("/author"), "sin");
 
     // Initialize the scheduler
