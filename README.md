@@ -105,8 +105,8 @@ To run with qemu and bochs, you will need their respective packages.
 
 ```bash
 # QEMU
-make qemu
+$ make qemu
 
 # bochs
-make bochs
+$ make bochs
 ```
