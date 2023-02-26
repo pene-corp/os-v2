@@ -1,6 +1,7 @@
 .PHONY: default clean force_look qemu bochs debug mount_fat check_fat umount_fat
 
-default: thor.flp
+# FIXME: Change default compiler target
+default: floppy.flp
 
 kernel/debug/kernel.bin: force_look
 	cd kernel; $(MAKE)
@@ -24,9 +25,10 @@ compile: bootloader/stage1.bin bootloader/stage2.bin init/debug/init.bin kernel/
 
 hdd.img:
 	dd if=/dev/zero of=hdd.img bs=516096c count=1000
+	# FIXME: Better way to do thi (this is utter chaos :^()
 	(echo n; echo p; echo 1; echo ""; echo ""; echo t; echo c; echo a; echo 1; echo w;) | sudo fdisk -u -C1000 -S63 -H16 hdd.img
 
-thor.flp: hdd.img bootloader/stage1.bin bootloader/stage2.bin init/debug/init.bin kernel/debug/kernel.bin programs
+floppy.flp: hdd.img bootloader/stage1.bin bootloader/stage2.bin init/debug/init.bin kernel/debug/kernel.bin programs
 	mkdir -p mnt/fake/
 	dd if=bootloader/stage1.bin of=hdd.img conv=notrunc
 	dd if=bootloader/stage2.bin of=hdd.img seek=1 conv=notrunc
@@ -40,6 +42,7 @@ thor.flp: hdd.img bootloader/stage1.bin bootloader/stage2.bin init/debug/init.bi
 	sudo /bin/cp init/debug/init.bin mnt/fake/
 	sudo /bin/cp kernel/debug/kernel.bin mnt/fake/
 	sudo /bin/cp programs/dist/* mnt/fake/bin/
+	# FIXME: Don't use sleep here, actually wait for CP to finish because this might break on older systems
 	sleep 0.1
 	sudo /bin/umount mnt/fake/
 	sudo /sbin/losetup -d /dev/loop0
